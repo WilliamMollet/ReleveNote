@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{'modification'|trans}} {{entity}}{% endblock %}
+
+{% block body %}
+<div class="container d-flex align-content-center justify-content-center">
+    <h2>{{'modification'|trans}} {{entity|trans}}</h2>
+</div>
+<div class="container d-flex align-content-center justify-content-center">
+    <div style="width : 40vw">
+        {{form(form)}}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if matiere is empty %}
+        {{'accueil'|trans}}
+    {% else %}
+        {{ matiere.nom}} - Details
+    {% endif %}
+{% endblock %}
+
+
+{% block body %}
+
+    <h1>{{'liste'|trans}} {{'notes'|trans}} {% if matiere is not empty %} {{'de'|trans}} {{ matiere.nom }} {% endif %}</h1>
+    <div class="d-flex row">
+        <div class="col-6">
+        {% if notes is empty %}
+            <h2>{{'aucune'|trans}} {{'note'|trans}} {{"trouvée"|trans}}</h2>
+        {% else %}
+            <table>
+                <tr>
+                    <th>{{'id'|trans}}</th>
+                    <th>{{'note'|trans}}</th>
+                    <th>{{'matière'|trans}}</th>
+                    <th>{{'coefficient'|trans}}</th>
+                    <th>{{'passage'|trans}}</th>
+                    <th>{{'création'|trans}}</th>
+                    <th>{{'actions'|trans}}</th>
+                </tr>
+                {% for note in notes %}
+                    
+                    <tr>
+                        <td>{{ note.id }}</td>
+                        <td>{{ note.note }}</td>
+                        {% if matiere is empty %}
+                            <td><a href={{path('app_matiere',{'nom':note.matiere.nom})}}>{{note.matiere.nom}}</a></td>
+                        {% else %}
+                            <td>{{note.matiere.nom}}</td>
+                        {% endif %}
+                        <td>{{ note.coefficient }}</td>
+                        <td>{{ note.takenAt|date('d-m-Y ')}}{{'à'|trans}}{{note.takenAt|date(' H:i:s') }}</td>
+                        <td>{{ note.createdAt|date('d-m-Y ')}}{{'à'|trans}}{{note.createdAt|date(' H:i:s') }}</td>
+                        <td>
+                            <a href={{ path('app_note_edit', {'id': note.id}) }} class="btn btn-primary">{{'modifier'|trans}}</a>
+                            <a href={{ path('app_note_delete', {'id': note.id}) }} class="btn btn-danger">{{'supprimer'|trans}}</a>
+                        </td>
+                    </tr>
+                    {% set total = total + note.note * note.coefficient %}
+                    {% set coef = coef + note.coefficient %}
+                {% endfor %}    
+            </table>
+        {% endif %}
+        {% if coef != 0 %}
+            {% set total = (total / coef)|round(1,'common') %}
+        {% endif %}
+        </div>
+        <div class="col-6">
+            <div class="col">
+                {% if matieres is empty %}
+                    <h2>{{'aucune'|trans}} {{'matière'|trans}} {{"trouvée"|trans}}</h2>
+                    <a href={{ path('app_list_matiere') }} class="btn btn-primary">{{'liste'|trans}} {{'matière'|trans}}</a>
+                {% else %}
+                <h2>{{'moyenne'|trans}}</h2>
+                <h4>{{total}}</h4>
+                <h2>{{'ajouter'|trans}} {{'note'|trans}}</h2>
+                {{ form(form) }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{'liste'|trans}} {{'matières'|trans}}{% endblock %}
+
+{% block body %}
+
+    <h1>{{'liste'|trans}} {{'matières'|trans}}</h1>
+    <div class="d-flex row">
+        <div class="col-6">
+            {% if matieres is empty %}
+                <h2>{{'aucune'|trans}} {{'matière'|trans}} {{"trouvée"|trans}}</h2>
+            {% else %}
+                <table>
+                    <tr>
+                        <th>{{'Id'|trans}}</th>
+                        <th>{{'Nom'|trans}}</th>
+                        <th>{{'Coefficient'|trans}}</th>
+                        <th>{{'Actions'|trans}}</th>
+                    </tr>
+                    {% for matiere in matieres %}
+                        <tr>
+                            <td>{{ matiere.id }}</td>
+                            <td>{{ matiere.nom }}</td>
+                            <td>{{ matiere.coefficient }}</td>
+                            <td>
+                                <a href={{ path('app_matiere', {'nom': matiere.nom}) }} class="btn btn-success">{{'voir'|trans}}</a>
+                                <a href={{ path('app_matiere_edit', {'id': matiere.id}) }} class="btn btn-primary">{{'modifier'|trans}}</a>
+                                <a href={{ path('app_matiere_delete', {'id': matiere.id}) }} class="btn btn-danger">{{'supprimer'|trans}}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}    
+                </table>
+            {% endif %}
+        </div>
+        <div class="col-6">
+            <h2>{{'ajouter'|trans}} {{'matière'|trans}}</h2>
+            {{ form(form) }}
+        </div>
+    </div>
+
+{% endblock %}
